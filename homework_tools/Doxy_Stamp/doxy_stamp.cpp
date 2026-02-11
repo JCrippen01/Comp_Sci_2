@@ -8,10 +8,14 @@
 
 namespace fs = std::filesystem;
 
-// Configure your UID here
-const std::string AUTHOR_ID = "your_uid";
+// Location of config file in home directory
+std::string getConfigPath() {
+    const char* home = std::getenv("HOME");
+    if (!home) return ".doxy_stamp_config";
+    return std::string(home) + "/.doxy_stamp_config";
+}
 
-// Get today's date in YYYY-MM-DD format
+// Get today's date
 std::string getTodayDate() {
     auto now = std::chrono::system_clock::now();
     std::time_t t = std::chrono::system_clock::to_time_t(now);
@@ -22,24 +26,24 @@ std::string getTodayDate() {
     return oss.str();
 }
 
-// Only target common C++ file extensions
+// Only C++ file types
 bool isCppFile(const fs::path& path) {
     std::string ext = path.extension().string();
     return (ext == ".cpp" || ext == ".cc" || ext == ".cxx" ||
             ext == ".h"   || ext == ".hpp" || ext == ".hxx");
 }
 
-// Read entire file into a string
-bool readFile(const fs::path& path, std::string& outContent) {
+// Read full file
+bool readFile(const fs::path& path, std::string& content) {
     std::ifstream in(path);
     if (!in) return false;
 
-    outContent.assign((std::istreambuf_iterator<char>(in)),
-                       std::istreambuf_iterator<char>());
+    content.assign((std::istreambuf_iterator<char>(in)),
+                    std::istreambuf_iterator<char>());
     return true;
 }
 
-// Write entire string back to file
+// Write full file
 bool writeFile(const fs::path& path, const std::string& content) {
     std::ofstream out(path);
     if (!out) return false;
@@ -48,15 +52,61 @@ bool writeFile(const fs::path& path, const std::string& content) {
     return true;
 }
 
-int main() {
-    std::string date;
-    std::string assignment;
+// Load UID from config
+std::string loadUID() {
+    std::ifstream in(getConfigPath());
+    if (!in) return "";
+    std::string uid;
+    std::getline(in, uid);
+    return uid;
+}
 
-    // Auto-detect date
+// Save UID to config
+void saveUID(const std::string& uid) {
+    std::ofstream out(getConfigPath());
+    out << uid;
+}
+
+int main() {
+
+    std::string uid = loadUID();
+
+    // First-time setup or confirmation
+    if (uid.empty()) {
+        while (true) {
+            std::cout << "Enter your UID: ";
+            std::getline(std::cin, uid);
+
+            std::cout << "You entered: " << uid << "\n";
+            std::cout << "Is this correct? (y/n): ";
+
+            std::string confirm;
+            std::getline(std::cin, confirm);
+
+            if (confirm == "y" || confirm == "Y") {
+                saveUID(uid);
+                break;
+            }
+        }
+    } else {
+        std::cout << "Saved UID detected: " << uid << "\n";
+        std::cout << "Use this UID? (y/n): ";
+
+        std::string confirm;
+        std::getline(std::cin, confirm);
+
+        if (!(confirm == "y" || confirm == "Y")) {
+            uid.clear();
+            return main();  // restart setup
+        }
+    }
+
+    // Date handling
     std::string today = getTodayDate();
-    std::cout << "Detected today's date: " << today << "\n";
+    std::cout << "\nDetected today's date: " << today << "\n";
     std::cout << "Is this correct? (y/n): ";
 
+    std::string date;
     std::string response;
     std::getline(std::cin, response);
 
@@ -67,6 +117,7 @@ int main() {
         std::getline(std::cin, date);
     }
 
+    std::string assignment;
     std::cout << "Enter assignment name: ";
     std::getline(std::cin, assignment);
 
@@ -75,17 +126,10 @@ int main() {
 
     std::cout << "\nScanning current directory...\n\n";
 
-    bool anySeen = false;
-
     for (const auto& entry : fs::directory_iterator(fs::current_path())) {
 
-        if (!entry.is_regular_file())
-            continue;
-
-        if (!isCppFile(entry.path()))
-            continue;
-
-        anySeen = true;
+        if (!entry.is_regular_file()) continue;
+        if (!isCppFile(entry.path())) continue;
 
         std::string filename = entry.path().filename().string();
 
@@ -93,7 +137,7 @@ int main() {
         std::string answer;
         std::getline(std::cin, answer);
 
-        if (answer != "y" && answer != "Y")
+        if (!(answer == "y" || answer == "Y"))
             continue;
 
         std::string content;
@@ -108,11 +152,10 @@ int main() {
             continue;
         }
 
-        // Build header
         std::string stamp = "/**\n";
         stamp += " * " + border + "\n";
         stamp += " * @file " + filename + "\n";
-        stamp += " * @author " + AUTHOR_ID + "\n";
+        stamp += " * @author " + uid + "\n";
         stamp += " * @date " + date + "\n";
         stamp += " * @brief " + assignment + "\n";
         stamp += " * " + border + "\n";
@@ -126,10 +169,6 @@ int main() {
         }
 
         std::cout << filename << " stamped successfully.\n\n";
-    }
-
-    if (!anySeen) {
-        std::cout << "No C++ files found in this directory.\n";
     }
 
     std::cout << "Done.\n";
