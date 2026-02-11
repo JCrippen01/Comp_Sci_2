@@ -1,0 +1,25 @@
+Paris,France,1200.50
+Tokyo,Japan,1550.00
+London,United Kingdom,1100.25
+Rome,Italy,980.75
+Sydney,Australia,1850.00
+New York,USA,850.00
+Cairo,Egypt,750.40
+Rio de Janeiro,Brazil,1300.20
+Cape Town,South Africa,1400.10
+Bangkok,Thailand,600.50
+Barcelona,Spain,1050.80
+Berlin,Germany,920.00
+Seoul,South Korea,1450.30
+Mexico City,Mexico,550.00
+Amsterdam,Netherlands,1150.45
+Athens,Greece,890.15
+Dubai,UAE,1700.00
+Toronto,Canada,700.25
+Singapore,Singapore,1600.90
+Reykjavik,Iceland,1950.00
+Lima,Peru,820.60
+Prague,Czech Republic,870.35
+Dublin,Ireland,1020.90
+Hanoi,Vietnam,580.00
+Lisbon,Portugal,940.55
