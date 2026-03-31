@@ -1,0 +1,89 @@
+#include <iostream>
+using namespace std;
+
+template <typename T>
+class Queue {
+protected:
+    class ListNode {
+    public:
+        T data;
+        ListNode* next;
+    };
+
+    ListNode* front;
+    ListNode* rear;
+
+public:
+    // Enum to represent sides of the queue
+    enum QueueSide { FRONT, REAR };
+
+    Queue() {
+        front = nullptr;
+        rear = nullptr;
+    }
+
+    ~Queue() {
+        clear();
+    }
+
+    bool isEmpty() const {
+        return front == nullptr;
+    }
+
+    // Enqueue → always REAR
+    void enqueue(T value) {
+        ListNode* newNode = new ListNode;
+        newNode->data = value;
+        newNode->next = nullptr;
+
+        if (isEmpty()) {
+            front = newNode;
+            rear = newNode;
+        } else {
+            rear->next = newNode;
+            rear = newNode;
+        }
+    }
+
+    // Dequeue → always FRONT
+    void dequeue() {
+        if (isEmpty()) return;
+
+        ListNode* temp = front;
+        front = front->next;
+        delete temp;
+
+        if (front == nullptr) {
+            rear = nullptr;
+        }
+    }
+
+    // Peek with side selection
+    T peek(QueueSide side) const {
+        if (isEmpty()) {
+            throw runtime_error("Queue is empty");
+        }
+
+        if (side == FRONT) {
+            return front->data;
+        } else { // REAR
+            return rear->data;
+        }
+    }
+
+    void clear() {
+        while (!isEmpty()) {
+            dequeue();
+        }
+    }
+
+    void displayQueue() const {
+        ListNode* nodePtr = front;
+
+        while (nodePtr != nullptr) {
+            cout << nodePtr->data << " ";
+            nodePtr = nodePtr->next;
+        }
+        cout << endl;
+    }
+};

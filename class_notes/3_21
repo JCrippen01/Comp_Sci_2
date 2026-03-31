@@ -1,0 +1,30 @@
+template <typename T>
+void LinkedList<T>::deleteNode(T v) {
+    // Step 1: check for empty list
+    if (head == nullptr) {
+        return;
+    }
+
+    // Step 2: check the head node
+    if (head->data == v) {
+        ListNode* temp = head;
+        head = head->next;
+        delete temp;
+        return;
+    }
+
+    // Step 3: traverse to find the value
+    ListNode* nodePtr = head;
+    ListNode* previous = nullptr;
+
+    while (nodePtr != nullptr && nodePtr->data != v) {
+        previous = nodePtr;
+        nodePtr = nodePtr->next;
+    }
+
+    // Step 4: unlink and delete
+    if (nodePtr != nullptr) {
+        previous->next = nodePtr->next;
+        delete nodePtr;
+    }
+}
