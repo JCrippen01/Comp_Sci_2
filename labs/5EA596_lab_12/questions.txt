@@ -1,0 +1,13 @@
+One of the most frustrating parts of this assignment was the disconnect between the provided skeleton code and the assignment requirements.
+ The BST template file included specific recursive helper functions to implement, but the assignment instructions also referenced features 
+ like searching and traversal tracing that were not clearly defined in the starter code. This created uncertainty about what exactly needed 
+ to be implemented versus what was optional or part of a later step.
+
+
+Another challenge was the complexity of recursive logic, especially in the removeRec function. Handling all three cases (no children, one child, and two children)
+ required careful thinking, and it was easy to make small mistakes that caused incorrect behavior or crashes. Debugging recursive functions was also difficult because 
+ errors are not always obvious and can occur deep in the call stack.
+
+Finally, managing memory correctly using recursion added another layer of difficulty. Understanding why destroyRec must use post-order traversal and copyRec must use 
+pre-order required deeper conceptual understanding rather than just writing code. Overall, the assignment required combining multiple concepts at once, which made it 
+challenging but also valuable for learning.

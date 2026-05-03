@@ -1,0 +1,24 @@
+Nashville,Chicago
+Nashville,Paris
+Chicago,London
+Chicago,Seattle
+London,Dubai
+London,Kathmandu
+Dubai,London
+Dubai,Tokyo
+Tokyo,Sydney
+Tokyo,Paris
+Paris,Nashville
+Paris,Tokyo
+Seattle,Tokyo
+Seattle,Nashville
+London,New York
+New York,London
+Dubai,Mumbai
+Mumbai,Dubai
+Sydney,Los Angeles
+Los Angeles,Chicago
+Kathmandu,Dubai
+Paris,Berlin
+Berlin,London
+
